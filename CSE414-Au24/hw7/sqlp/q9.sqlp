@@ -1,0 +1,74 @@
+SELECT 
+    sharedM.x AS first_country, 
+    sharedM.y AS second_country
+FROM (
+    SELECT DISTINCT 
+        a.country AS x, 
+        c.country AS y
+    FROM (
+        SELECT DISTINCT 
+            z AS country, 
+            (SELECT b.`-id` AS mountain 
+             FROM geo.world a, 
+                  a.mondial.mountain b, 
+                  split(b.`-country`, ' ') c 
+             WHERE c = z) AS mountains
+        FROM geo.world x, 
+             x.mondial.mountain y, 
+             split(y.`-country`, ' ') z
+    ) a, 
+    a.mountains b, 
+    (
+        SELECT DISTINCT 
+            z AS country, 
+            (SELECT b.`-id` AS mountain 
+             FROM geo.world a, 
+                  a.mondial.mountain b, 
+                  split(b.`-country`, ' ') c 
+             WHERE c = z) AS mountains
+        FROM geo.world x, 
+             x.mondial.mountain y, 
+             split(y.`-country`, ' ') z
+    ) c, 
+    c.mountains d
+    WHERE a.country < c.country 
+      AND b = d
+) sharedM,
+(
+    SELECT DISTINCT 
+        a.country AS s, 
+        c.country AS t
+    FROM (
+        SELECT DISTINCT 
+            z AS country, 
+            (SELECT b.`-id` AS sea 
+             FROM geo.world a, 
+                  a.mondial.sea b, 
+                  split(b.`-country`, ' ') c 
+             WHERE c = z) AS seas
+        FROM geo.world x, 
+             x.mondial.sea y, 
+             split(y.`-country`, ' ') z
+    ) a, 
+    a.seas b, 
+    (
+        SELECT DISTINCT 
+            z AS country, 
+            (SELECT b.`-id` AS sea 
+             FROM geo.world a, 
+                  a.mondial.sea b, 
+                  split(b.`-country`, ' ') c 
+             WHERE c = z) AS seas
+        FROM geo.world x, 
+             x.mondial.sea y, 
+             split(y.`-country`, ' ') z
+    ) c, 
+    c.seas d
+    WHERE a.country < c.country 
+      AND b = d
+) sharedS
+WHERE 
+    (sharedM.x = sharedS.s AND sharedM.y = sharedS.t) 
+    OR (sharedM.y = sharedS.s AND sharedM.x = sharedS.t);
+
+# Runtime 0.251 sec

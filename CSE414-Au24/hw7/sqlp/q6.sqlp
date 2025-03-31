@@ -1,0 +1,38 @@
+SELECT DISTINCT 
+    c.`-car_code` AS country_code, 
+    c.name AS country_name, 
+    n AS mountains
+FROM 
+    geo.world x, 
+    x.mondial.country c 
+    LEFT OUTER JOIN (
+        SELECT 
+            y.name AS name, 
+            y.height AS height, 
+            r AS code
+        FROM 
+            geo.world x, 
+            x.mondial.mountain y, 
+            split(y.`-country`, ' ') r
+    ) AS m
+    ON c.`-car_code` = m.code
+LET 
+    n = (
+        SELECT 
+            m1.name, 
+            m1.height
+        FROM (
+            SELECT 
+                y.name AS name, 
+                y.height AS height, 
+                r AS code
+            FROM 
+                geo.world x, 
+                x.mondial.mountain y, 
+                split(y.`-country`, ' ') r
+        ) AS m1
+        WHERE 
+            m.code = m1.code
+    )
+ORDER BY 
+    ARRAY_COUNT(n) DESC;

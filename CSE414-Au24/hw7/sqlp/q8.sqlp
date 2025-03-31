@@ -1,0 +1,14 @@
+WITH seaList AS (
+  SELECT distinct code
+  FROM geo.world x, x.mondial.sea y, split(y.`-country`, ' ')  code ),
+
+country_code as (SELECT distinct value y.`-car_code`  
+FROM geo.world x, x.mondial.country y
+where y.`-car_code` not in (
+select distinct value g.code
+from seaList as g))
+
+select country_code, c.name as country_name, c.`-area` as area
+from country_code, geo.world x, x.mondial.country c
+where country_code = c.`-car_code`
+order by float(c.`-area`) DESC;

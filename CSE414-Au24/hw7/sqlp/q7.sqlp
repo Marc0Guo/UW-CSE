@@ -1,0 +1,11 @@
+SELECT y.`-car_code` AS country_code,
+       y.name AS country_name,
+       u AS seas
+FROM geo.world AS x,
+     x.mondial.country AS y LET u =
+  (SELECT z.name AS sea
+   FROM x.mondial.sea AS z,
+        split(z.`-country`, " ") AS code_list
+   WHERE y.`-car_code` = code_list)
+WHERE ARRAY_COUNT(u) >= 2
+ORDER BY ARRAY_COUNT(u) DESC;

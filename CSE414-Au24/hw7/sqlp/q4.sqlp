@@ -1,0 +1,16 @@
+SELECT u.text AS ethnic_group,
+       COUNT(*) AS num_countries,
+       SUM(float(u.percentage) / 100.0 * float(u.population)) AS total_population
+FROM
+  (SELECT y.population AS population,
+          z.`#text` AS text,
+          z.`-percentage` AS percentage
+   FROM geo.world AS x,
+        x.mondial.country AS y,
+        (CASE
+             WHEN y.ethnicgroups IS MISSING THEN []
+             WHEN IS_ARRAY(y.ethnicgroups) THEN y.ethnicgroups
+             ELSE [y.ethnicgroups]
+         END) AS z) AS u
+GROUP BY u.text
+ORDER BY total_population DESC;
