@@ -1,0 +1,10 @@
+# Write your answers to task3 below.
+# Do NOT remove or modify the question numbers.
+# Each answer should be kept on a single line.
+
+1. I'm using vim
+2. using command vim animals.txt
+3. First press `$` to go to the end of line. Then press "i" to start insert mode.Finally type the word "animal" 
+4. First press "^" to move to first character of the line. Follow the same procedure in question 3.
+5. Exit current mode by ESC, then type:w 
+6. Exit current mode by ESC, then type:q
